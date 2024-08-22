@@ -56,7 +56,7 @@ class PW:
         data = {
             "UserSID": ssid,
             "UserToken": user_pw_id,
-            # 'UserTokenUsed': True
+            'UserTokenUsed': True
         }
         query_str = '/json/CardGetList'
         result = requests.post(f"{self.host}{query_str}", json=data).json()["Card"]
