@@ -2,6 +2,7 @@ import hashlib
 import requests
 import base64
 
+
 class PW:
     def __init__(self, login: str = "admin", passwd: str = "admin", serv_addr: str = "localhost"):
         def get_hash(passwd):
@@ -9,6 +10,7 @@ class PW:
             password_hash += "F593B01C562548C6B7A31B30884BDE53"
             password_hash = hashlib.md5(password_hash.encode()).hexdigest().upper()
             return hashlib.md5(password_hash.encode()).hexdigest().upper()
+
         self.passwd = get_hash(passwd)
         self.login = login
         self.host = serv_addr
@@ -53,7 +55,8 @@ class PW:
         ssid = self.__get_ssid()
         data = {
             "UserSID": ssid,
-            "UserToken": user_pw_id
+            "UserToken": user_pw_id,
+            # 'UserTokenUsed': True
         }
         query_str = '/json/CardGetList'
         result = requests.post(f"{self.host}{query_str}", json=data).json()["Card"]
@@ -69,7 +72,7 @@ class PW:
         query_str = '/json/BiometricIdentifierGetList'
         result = requests.post(f"{self.host}{query_str}", json=data).json()
         biometric_identifiers_list = []
-        if result["BiometricIdentifier"] == []:
+        if not result["BiometricIdentifier"]:
             return biometric_identifiers_list
         else:
             for biometric_identifier in result["BiometricIdentifier"]:
@@ -86,3 +89,5 @@ class PW:
         result = requests.post(f"{self.host}{query_str}", json=data).json()["Data"]
         self.__logout(ssid)
         return base64.b64decode(result.encode("UTF-8"))
+
+
