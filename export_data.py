@@ -112,7 +112,7 @@ def export():
     deps = get_departament_list()
     users = pw.get_users_list()
     export_data = ('Имя Сотрудника;Отдел;Вышестоящий отдел;Имя карты;Код карты;Статус;Antipassback;Disalarm;Security;'
-                   'VIP;PIN;Действителен с;Действителен по;Фото сотрудника\n')
+                   'VIP;PIN;Фото сотрудника\n')
     for user in users:
         data = get_user_properties(user)
 
