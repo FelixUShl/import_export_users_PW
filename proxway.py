@@ -104,21 +104,33 @@ class PW:
         self.__logout(ssid)
         return result
 
-    def set_user(self, name, dept_token, cards=None, bimetric=None, id = 0):
+    def set_user(self, name, dept_token, cards=None, biometric=None, emploee_id=0):
+        photo = None
         if cards is None:
             cards = []
-        if bimetric is None:
-            bimetric = []
+        if biometric is None:
+            biometric = []
+        else:
+            with open(biometric['Data'], 'rb') as image:
+                biometric['Data'] = base64.b64encode(image.read()).decode()
+                photo = biometric['Data']
+                biometric = [biometric]
         ssid = self.__get_ssid()
-        query_str = '/json/EmployeeSet'
+        query_str = '/json/EmployeeSetV2'
         data = {
             "UserSID": ssid,
             "Name": name,
             'DepartmentToken': dept_token,
             'NewCards': cards,
-            'NewBiometricIdentifiers': bimetric,
-            'Token': id
+            'NewBiometricIdentifiers': biometric,
+            'Token': emploee_id,
+            "ResultTokenRequired": True,
+            "PhotoBase64": photo,
+            "PhotoChanged": True,
         }
-        result = requests.post(f"{self.host}{query_str}", json=data).json()['ResultToken']
+        result = requests.post(f"{self.host}{query_str}", json=data).json()
+        result = result['ResultToken']
         self.__logout(ssid)
         return result
+
+
