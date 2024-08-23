@@ -1,10 +1,8 @@
 import os
-from proxway import PW
 
-login = "admin"
-passwd = "admin"
-serv_addr = "http://big-b.xyz:40001"
-pw = PW(login=login, passwd=passwd, serv_addr=serv_addr)
+from config import pw
+
+
 
 
 def get_departament_list():
@@ -108,7 +106,7 @@ def get_parent_dept(dept_name, depts_list):
     return ""
 
 
-def export():
+def export_data():
     deps = get_departament_list()
     users = pw.get_users_list()
     export_data = ('Имя Сотрудника;Отдел;Вышестоящий отдел;Имя карты;Код карты;Статус;Antipassback;Disalarm;Security;'

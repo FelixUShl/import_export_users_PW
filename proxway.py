@@ -90,4 +90,35 @@ class PW:
         self.__logout(ssid)
         return base64.b64decode(result.encode("UTF-8"))
 
+    def set_departament(self, name, self_id=0, parent_id=0):
+        ssid = self.__get_ssid()
+        query_str = '/json/DepartmentSet'
+        data = {
+            "UserSID": ssid,
+            "Name": name,
+            "ParentToken": parent_id,
+            'Token': self_id,
+            "ResultTokenRequired": True
+        }
+        result = requests.post(f"{self.host}{query_str}", json=data).json()['ResultToken']
+        self.__logout(ssid)
+        return result
 
+    def set_user(self, name, dept_token, cards=None, bimetric=None, id = 0):
+        if cards is None:
+            cards = []
+        if bimetric is None:
+            bimetric = []
+        ssid = self.__get_ssid()
+        query_str = '/json/EmployeeSet'
+        data = {
+            "UserSID": ssid,
+            "Name": name,
+            'DepartmentToken': dept_token,
+            'NewCards': cards,
+            'NewBiometricIdentifiers': bimetric,
+            'Token': id
+        }
+        result = requests.post(f"{self.host}{query_str}", json=data).json()['ResultToken']
+        self.__logout(ssid)
+        return result
