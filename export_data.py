@@ -1,6 +1,6 @@
 import os
 
-from config import pw
+from config import *
 
 
 
@@ -106,7 +106,7 @@ def get_parent_dept(dept_name, depts_list):
     return ""
 
 
-def export_data():
+def export_data(data_csv):
     deps = get_departament_list()
     users = pw.get_users_list()
     export_data = ('Имя Сотрудника;Отдел;Вышестоящий отдел;Имя карты;Код карты;Статус;Antipassback;Disalarm;Security;'
@@ -144,5 +144,5 @@ def export_data():
                                 # f'{row['Действителен с']};'
                                 # f'{row['Действителен по']};'
                                 f"\n")
-    with open("data.csv", "w") as f:
+    with open(data_csv, "w") as f:
         f.write(export_data[:-1])

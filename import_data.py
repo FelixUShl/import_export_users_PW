@@ -1,10 +1,10 @@
-from config import pw
+from config import *
 
 
 def get_data_from_csv(path_to_csv):
     data = list()
     with open(path_to_csv, 'r') as f:
-        row_data = f.read().split('\n')
+        row_data = f.read().rstrip('\n').split('\n')
     if row_data[0] != ('Имя Сотрудника;Отдел;Вышестоящий отдел;Имя карты;Код карты;Статус;Antipassback;Disalarm;'
                        'Security;VIP;PIN;Фото сотрудника'):
         return False
@@ -116,6 +116,6 @@ def create_users(data_from_csv):
         print(f'{emploee_properties['name']} занесен в базу')
 
 
-def import_data():
-    data = get_data_from_csv('data.csv')
+def import_data(csv_file):
+    data = get_data_from_csv(csv_file)
     create_users(data)
