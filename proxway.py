@@ -128,14 +128,6 @@ class PW:
             "PhotoBase64": photo,
             "PhotoChanged": True,
         }
-        print ("SSID", data["UserSID"],
-               "\nName", data['Name'],
-               "\nDepartmentToken", data['DepartmentToken'],
-               "\nNewCards", data['NewCards'],
-               "\nPhotoBase64", type(data),
-               "\nToken", data['Token'],
-               "\nResultTokenRequired", data['ResultTokenRequired'],
-               "\nPhotoChanged", data['PhotoChanged'])
         result = requests.post(f"{self.host}{query_str}", json=data).json()
         result = result['ResultToken']
         self.__logout(ssid)
