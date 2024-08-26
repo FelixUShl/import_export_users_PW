@@ -116,7 +116,7 @@ class PW:
                 photo = biometric['Data']
                 biometric = [biometric]
         ssid = self.__get_ssid()
-        query_str = '/json/EmployeeSetV2'
+        query_str = '/json/EmployeeSet'
         data = {
             "UserSID": ssid,
             "Name": name,
@@ -128,6 +128,14 @@ class PW:
             "PhotoBase64": photo,
             "PhotoChanged": True,
         }
+        print ("SSID", data["UserSID"],
+               "\nName", data['Name'],
+               "\nDepartmentToken", data['DepartmentToken'],
+               "\nNewCards", data['NewCards'],
+               "\nPhotoBase64", type(data),
+               "\nToken", data['Token'],
+               "\nResultTokenRequired", data['ResultTokenRequired'],
+               "\nPhotoChanged", data['PhotoChanged'])
         result = requests.post(f"{self.host}{query_str}", json=data).json()
         result = result['ResultToken']
         self.__logout(ssid)

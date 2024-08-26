@@ -105,8 +105,8 @@ def create_users(data_from_csv):
                                                "Quality": 0,
                                                "BiometricIndex": "0",
                                                "BiometricType": "Face",
-                                               # 'isNew': True,
-                                               # # "Status": "complete"
+                                               'isNew': True,
+                                               "Status": "complete"
                                                }
         pw.set_user(name=emploee_properties['name'],
                     dept_token=emploee_properties['dept_token'],
