@@ -94,7 +94,11 @@ class PW:
     def set_departament(self, name, self_id=0, parent_id=0):
         ssid = self.__get_ssid()
         query_str = '/json/DepartmentSet'
+        role_access = False
+        if parent_id != 0:
+            role_access = True
         data = {
+            'AccessGroupInherited': role_access,
             "UserSID": ssid,
             "Name": name,
             "ParentToken": parent_id,

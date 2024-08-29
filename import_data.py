@@ -3,7 +3,7 @@ from config import *
 
 def get_data_from_csv(path_to_csv):
     data = list()
-    with open(path_to_csv, 'r') as f:
+    with open(path_to_csv, 'r', encoding='utf-8') as f:
         row_data = f.read().rstrip('\n').split('\n')
     if row_data[0] != ('Имя Сотрудника;Отдел;Вышестоящий отдел;Имя карты;Код карты;Статус;Antipassback;Disalarm;'
                        'Security;VIP;PIN;Фото сотрудника'):
@@ -24,15 +24,26 @@ def get_data_from_csv(path_to_csv):
                     'PIN': row[10]
                     }
         if not (row[0] and row[1]):
-            data[-1]['Карты'].append(card)
+            if card:
+                data[-1]['Карты'].append(card)
         else:
-            data.append({
-                'Имя Сотрудника': row[0],
-                'Отдел': row[1],
-                'Вышестоящий отдел': row[2],
-                'Карты': [card],
-                'Фото сотрудника': row[11]
-            })
+            if not card:
+                data.append({
+                    'Имя Сотрудника': row[0],
+                    'Отдел': row[1],
+                    'Вышестоящий отдел': row[2],
+                    'Карты': None,
+                    'Фото сотрудника': row[11]
+                })
+            else:
+                data.append({
+                    'Имя Сотрудника': row[0],
+                    'Отдел': row[1],
+                    'Вышестоящий отдел': row[2],
+                    'Карты': [card],
+                    'Фото сотрудника': row[11]
+                })
+
 
     return data
 
@@ -67,6 +78,7 @@ def create_depts(data_from_csv):
 def create_users(data_from_csv):
     depts_list = create_depts(data_from_csv)
     users_list = pw.get_users_list()
+    print(data_from_csv[:10])
     for emploee in data_from_csv:
         emploee_properties = {'name': emploee['Имя Сотрудника'],
                               'emploee_id': 0,
