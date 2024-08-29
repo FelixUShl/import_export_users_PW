@@ -114,7 +114,7 @@ def export_data(csv):
     for user in users:
         data = get_user_properties(user)
 
-        row_data += (f"\n{data[0]['Имя Сотрудника']};"
+        row_data = (f"\n{data[0]['Имя Сотрудника']};"
                      f"{data[0]['Отдел']};"
                      f"{get_parent_dept(data[0]['Отдел'], deps)};"
                      f"{data[0]['Имя карты']};"
@@ -134,7 +134,7 @@ def export_data(csv):
 
         if len(data) > 1:
             for row in data[1:]:
-                row_data += (f"\n;;;"
+                row_data = (f"\n;;;"
                              f"{row['Имя карты']};"
                              f'{row['Код карты']};'
                              f'{row['Статус']};'
