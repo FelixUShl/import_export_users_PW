@@ -5,8 +5,8 @@ import base64
 
 class PW:
     def __init__(self, login: str = "admin", passwd: str = "admin", serv_addr: str = "localhost"):
-        def get_hash(passwd):
-            password_hash = hashlib.md5(passwd.encode()).hexdigest().upper()
+        def get_hash(pas):
+            password_hash = hashlib.md5(pas.encode()).hexdigest().upper()
             password_hash += "F593B01C562548C6B7A31B30884BDE53"
             password_hash = hashlib.md5(password_hash.encode()).hexdigest().upper()
             return hashlib.md5(password_hash.encode()).hexdigest().upper()
@@ -76,7 +76,8 @@ class PW:
             return biometric_identifiers_list
         else:
             for biometric_identifier in result["BiometricIdentifier"]:
-                biometric_identifiers_list.append(biometric_identifier["Token"])
+                if biometric_identifier["BiometricType"] == 'Face':
+                    biometric_identifiers_list.append(biometric_identifier["Token"])
         return biometric_identifiers_list
 
     def get_biometric_identifier(self, identifier_id):
@@ -132,5 +133,3 @@ class PW:
         result = result['ResultToken']
         self.__logout(ssid)
         return result
-
-

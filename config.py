@@ -7,7 +7,7 @@ pw = PW(login=login, passwd=passwd, serv_addr=serv_addr)
 
 # Настройки файла импорта/экспорта
 path_to_data = '' # Путь до файла, можно оставить пустым, если файл лежит в корневой папке скрипта
-name_csv = 'data2.csv' # Имя файла
+name_csv = 'data.csv' # Имя файла
 
 if path_to_data:
     path_to_data += '/'

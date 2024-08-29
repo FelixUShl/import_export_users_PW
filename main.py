@@ -6,7 +6,7 @@ from config import data_csv
 
 
 def main():
-    import_data(data_csv)
+    export_data(data_csv)
     print(data_csv)
 
 

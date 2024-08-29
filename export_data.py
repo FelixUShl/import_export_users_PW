@@ -3,8 +3,6 @@ import os
 from config import *
 
 
-
-
 def get_departament_list():
     row_list = pw.get_departaments_list()
     result = []
@@ -42,7 +40,7 @@ def get_user_identifiers(user_id):
             os.mkdir('biometric')
         for biometric_identifier_id in biometric_identifiers_id:
             biometric_identifier = pw.get_biometric_identifier(biometric_identifier_id)
-            file_path = f"biometric/{biometric_identifier_id}.png"
+            file_path = f"biometric/{user_id}.png"
             with open(file_path, "wb") as image:
                 image.write(biometric_identifier)
             result['biometric_identifiers'].append(file_path)
@@ -106,43 +104,48 @@ def get_parent_dept(dept_name, depts_list):
     return ""
 
 
-def export_data(data_csv):
+def export_data(csv):
     deps = get_departament_list()
     users = pw.get_users_list()
-    export_data = ('Имя Сотрудника;Отдел;Вышестоящий отдел;Имя карты;Код карты;Статус;Antipassback;Disalarm;Security;'
-                   'VIP;PIN;Фото сотрудника\n')
+    row_data = ('Имя Сотрудника;Отдел;Вышестоящий отдел;Имя карты;Код карты;Статус;Antipassback;Disalarm;Security;'
+                'VIP;PIN;Фото сотрудника')
+    with open(csv, "w", encoding='utf-8') as f:
+        f.write(row_data)
     for user in users:
         data = get_user_properties(user)
 
-        export_data += (f"{data[0]['Имя Сотрудника']};"
-                        f"{data[0]['Отдел']};"
-                        f"{get_parent_dept(data[0]['Отдел'], deps)};"
-                        f"{data[0]['Имя карты']};"
-                        f'{data[0]['Код карты']};'
-                        f'{data[0]['Статус']};'
-                        f'{data[0]['Antipassback']};'
-                        f'{data[0]['Disalarm']};'
-                        f'{data[0]['Security']};'
-                        f'{data[0]['VIP']};'
-                        f'{data[0]['PIN']};'
-                        # f'{data[0]['Действителен с']};'
-                        # f'{data[0]['Действителен по']};'
-                        f'{data[0]['Фото сотрудника']}'
-                        f"\n")
+        row_data += (f"\n{data[0]['Имя Сотрудника']};"
+                     f"{data[0]['Отдел']};"
+                     f"{get_parent_dept(data[0]['Отдел'], deps)};"
+                     f"{data[0]['Имя карты']};"
+                     f'{data[0]['Код карты']};'
+                     f'{data[0]['Статус']};'
+                     f'{data[0]['Antipassback']};'
+                     f'{data[0]['Disalarm']};'
+                     f'{data[0]['Security']};'
+                     f'{data[0]['VIP']};'
+                     f'{data[0]['PIN']};'
+                     # f'{data[0]['Действителен с']};'
+                     # f'{data[0]['Действителен по']};'
+                     f'{data[0]['Фото сотрудника']}')
+        with open(csv, "a", encoding='utf-8') as f:
+            f.write(row_data)
+        print(row_data)
 
         if len(data) > 1:
             for row in data[1:]:
-                export_data += (f";;;"
-                                f"{row['Имя карты']};"
-                                f'{row['Код карты']};'
-                                f'{row['Статус']};'
-                                f'{row['Antipassback']};'
-                                f'{row['Disalarm']};'
-                                f'{row['Security']};'
-                                f'{row['VIP']};'
-                                f'{row['PIN']};'
-                                # f'{row['Действителен с']};'
-                                # f'{row['Действителен по']};'
-                                f"\n")
-    with open(data_csv, "w") as f:
-        f.write(export_data[:-1])
+                row_data += (f"\n;;;"
+                             f"{row['Имя карты']};"
+                             f'{row['Код карты']};'
+                             f'{row['Статус']};'
+                             f'{row['Antipassback']};'
+                             f'{row['Disalarm']};'
+                             f'{row['Security']};'
+                             f'{row['VIP']};'
+                             f'{row['PIN']};'
+                             # f'{row['Действителен с']};'
+                             # f'{row['Действителен по']};'
+                             )
+                with open(csv, "a", encoding='utf-8') as f:
+                    f.write(row_data)
+                print(row_data)
