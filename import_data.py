@@ -1,4 +1,5 @@
 from config import *
+import time
 
 
 def get_data_from_csv(path_to_csv):
@@ -28,21 +29,16 @@ def get_data_from_csv(path_to_csv):
                 data[-1]['Карты'].append(card)
         else:
             if not card:
-                data.append({
-                    'Имя Сотрудника': row[0],
-                    'Отдел': row[1],
-                    'Вышестоящий отдел': row[2],
-                    'Карты': None,
-                    'Фото сотрудника': row[11]
-                })
+                card = None
             else:
-                data.append({
-                    'Имя Сотрудника': row[0],
-                    'Отдел': row[1],
-                    'Вышестоящий отдел': row[2],
-                    'Карты': [card],
-                    'Фото сотрудника': row[11]
-                })
+                card = [card]
+            data.append({
+                'Имя Сотрудника': row[0],
+                'Отдел': row[1],
+                'Вышестоящий отдел': row[2],
+                'Карты': card,
+                'Фото сотрудника': row[11]
+            })
 
 
     return data
@@ -51,6 +47,7 @@ def get_data_from_csv(path_to_csv):
 def create_depts(data_from_csv):
     dept_list = list()
     depts_in_pw = pw.get_departaments_list()
+    print('Создаем отделы')
     for row in data_from_csv:
         if [row['Отдел'], row['Вышестоящий отдел']] not in dept_list:
             dept_list.append([row['Отдел'], row['Вышестоящий отдел']])
@@ -65,6 +62,7 @@ def create_depts(data_from_csv):
         dept_list[dept_elem] = {'Отдел': dept_list[dept_elem][0],
                                 'Вышестоящий отдел': dept_list[dept_elem][1],
                                 'dept_id': dept_id}
+    print('Отделы созданы. Сортируем отделы по старшенству')
     for dept in dept_list:
         if dept['Вышестоящий отдел']:
             for parent_dept in dept_list:
@@ -72,14 +70,18 @@ def create_depts(data_from_csv):
                     pw.set_departament(name=dept['Отдел'], self_id=dept['dept_id'], parent_id=parent_dept['dept_id'])
         else:
             pw.set_departament(name=dept['Отдел'], self_id=dept['dept_id'])
+    print('Отделы загружены')
     return dept_list
 
 
 def create_users(data_from_csv):
+    print('Запуск процесса импорта сотрудников')
     depts_list = create_depts(data_from_csv)
     users_list = pw.get_users_list()
-    print(data_from_csv[:10])
+    users_num = len(data_from_csv)
+    user_num = 1
     for emploee in data_from_csv:
+        start = time.time()
         emploee_properties = {'name': emploee['Имя Сотрудника'],
                               'emploee_id': 0,
                               'biometric': None,
@@ -125,7 +127,9 @@ def create_users(data_from_csv):
                     cards=emploee_properties['cards'],
                     biometric=emploee_properties['biometric'],
                     emploee_id=emploee_properties['emploee_id'])
-        print(f'{emploee_properties['name']} занесен в базу')
+        print(f'За {int(time.time()-start)} секунд {emploee_properties['name']} занесен в базу, {user_num} сотрудник из '
+              f'{users_num} записей')
+        user_num += 1
 
 
 def import_data(csv_file):
